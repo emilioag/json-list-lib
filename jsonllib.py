@@ -36,7 +36,7 @@ def diff_docs(items_2_add, items_2_del, path):
                 break
 
         if del_from_adds:
-            elem = get_elem_with_key(item_2_del["key"], path, adds)
+            elem = get_elem_with_key(value_of_key_item_2_del, path, adds)
             if elem is not None:
                 adds.remove(elem)
         else:

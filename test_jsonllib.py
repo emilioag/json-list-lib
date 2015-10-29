@@ -104,3 +104,6 @@ class TestJSON_ListLib_dictionaries(unittest.TestCase):
         obtainted_del.sort()
         self.assertEquals((expected_add, expected_del),
                           (obtained_add, obtainted_del))
+
+if __name__ == '__main__':
+    unittest.main()
