@@ -1,4 +1,6 @@
 def get_elem_with_key(key_name, path, l):
+    """Returns the element of the list l which has as value in the path,
+       key_name."""
     output = None
     for elem in l:
         if json_path(elem, path) == key_name:
@@ -8,12 +10,18 @@ def get_elem_with_key(key_name, path, l):
 
 
 def json_path(json, path):
+    """Returns the value of the nested key located in path."""
     for x in path.split("."):
         json = json.get(x)
     return json
 
 
 def diff_basic(to_add, to_del):
+    """Returns the list differences:
+       - adds Returns the elements that appear more times in to_add than in
+         to_del.
+       - dels Returns the elements that appear more times in to_del than in
+         to_add."""
     (adds, dels) = to_add, []
     for item_2_del in to_del:
         if item_2_del in to_add:
@@ -24,6 +32,13 @@ def diff_basic(to_add, to_del):
 
 
 def diff(a, b, path=None):
+    """Returns the list differences:
+       - adds Returns the elements that appear more times in to_add than in
+         to_del.
+       - dels Returns the elements that appear more times in to_del than in
+         to_add.
+       - In this context, appear means that th key value in path appears in
+         any element"""
     (adds, dels) = a, []
     if path is not None:
         (adds, dels) = diff_basic(map(lambda x: json_path(x, path), a),
