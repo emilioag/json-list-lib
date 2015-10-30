@@ -12,7 +12,7 @@ def get_elem_with_key(key_name, path, l):
 def json_path(json, path):
     """Returns the value of the nested key located in path."""
     for x in path.split("."):
-        json = json.get(x)
+        json = json.get(x) if isinstance(json, dict) else None
     return json
 
 
