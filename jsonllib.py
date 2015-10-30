@@ -16,35 +16,22 @@ def json_path(json, path):
     return json
 
 
-def diff_basic(to_add, to_del):
+def __diff(l1, l2):
     """Returns the list differences:
-       - adds Returns the elements that appear more times in to_add than in
-         to_del.
-       - dels Returns the elements that appear more times in to_del than in
-         to_add."""
-    (adds, dels) = to_add, []
-    for item_2_del in to_del:
-        if item_2_del in to_add:
-            adds.remove(item_2_del)
-        else:
-            dels.append(item_2_del)
-    return list(set(adds)), list(set(dels))
+       - o1 Returns the elements that appear more times in l1 than in
+         l2.
+       - o2 Returns the elements that appear more times in l2 than in
+         l1."""
+    (o1, o2) = l1, []
+    for item in l2:
+        o1.remove(item) if item in l1 else o2.append(item)
+    return list(set(o1)), list(set(o2))
 
 
-def diff(a, b, path=None):
+def diff(a, b, f=None):
     """Returns the list differences:
-       - adds Returns the elements that appear more times in to_add than in
-         to_del.
-       - dels Returns the elements that appear more times in to_del than in
-         to_add.
-       - In this context, appear means that th key value in path appears in
-         any element"""
-    (adds, dels) = a, []
-    if path is not None:
-        (adds, dels) = diff_basic(map(lambda x: json_path(x, path), a),
-                                  map(lambda x: json_path(x, path), b))
-        adds = [get_elem_with_key(i, path, a) for i in adds]
-        dels = [get_elem_with_key(i, path, b) for i in dels]
-    else:
-        (adds, dels) = diff_basic(a, b)
-    return adds, dels
+       - f is the function which is needed to apply for each element of the list
+         to transform the list in a basic list
+       - Returns a whith the elements that appears more times in a than in b
+       - Returns b whith the elements that appears more times in b than in a"""
+    return (__diff(map(f, a), map(f, b)) if f is not None else __diff(a, b))

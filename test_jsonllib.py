@@ -38,6 +38,10 @@ class TestJSON_ListLib(unittest.TestCase):
 
 
 class TestJSON_ListLib_dictionaries(unittest.TestCase):
+    def __reverse(self, a, d, add, delete):
+        return ([get_elem_with_key(i, "key", add) for i in a],
+                [get_elem_with_key(i, "key", delete) for i in d])
+
     def test_diferences_betwen_2_lists_equals(self):
         add = [{"key": "elem1", "value": 0},
                {"key": "elem2", "value": 1},
@@ -45,7 +49,8 @@ class TestJSON_ListLib_dictionaries(unittest.TestCase):
         delete = [{"key": "elem1", "value": 3},
                   {"key": "elem2", "value": 4},
                   {"key": "elem3", "value": 5}]
-        self.assertEquals(([], []), diff(add, delete, "key"))
+        self.assertEquals(([], []),
+                          diff(add, delete, lambda x: json_path(x, "key")))
 
     def test_diferences_with_more_adds_than_deletes(self):
         add = [{"key": "elem1", "value": 0},
@@ -55,7 +60,8 @@ class TestJSON_ListLib_dictionaries(unittest.TestCase):
         delete = [{"key": "elem1", "value": 3},
                   {"key": "elem2", "value": 4},
                   {"key": "elem3", "value": 5}]
-        (a, d) = diff(add, delete, "key")
+        (a, d) = diff(add, delete, lambda x: json_path(x, "key"))
+        (a, d) = self.__reverse(a, d, add, delete)
         (expected_add, expected_del) = (["elem1"], [])
         expected_del.sort()
         obtained_add = [i["key"] for i in a]
@@ -72,7 +78,8 @@ class TestJSON_ListLib_dictionaries(unittest.TestCase):
                   {"key": "elem2", "value": 4},
                   {"key": "elem3", "value": 5},
                   {"key": "elem1", "value": 0}]
-        (a, d) = diff(add, delete, "key")
+        (a, d) = diff(add, delete, lambda x: json_path(x, "key"))
+        (a, d) = self.__reverse(a, d, add, delete)
         (expected_add, expected_del) = ([], ["elem1"])
         expected_del.sort()
         obtained_add = [i["key"] for i in a]
@@ -95,7 +102,8 @@ class TestJSON_ListLib_dictionaries(unittest.TestCase):
                   {"key": "elem5", "value": 0},
                   {"key": "elem6", "value": 0},
                   {"key": "elem7", "value": 0}]
-        (a, d) = diff(add, delete, "key")
+        (a, d) = diff(add, delete, lambda x: json_path(x, "key"))
+        (a, d) = self.__reverse(a, d, add, delete)
         expected_add = ["elem1"]
         expected_del = ["elem4", "elem5", "elem6", "elem7"]
         expected_del.sort()
